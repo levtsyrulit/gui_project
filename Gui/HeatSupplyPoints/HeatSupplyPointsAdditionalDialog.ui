@@ -1,0 +1,246 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>Dialog</class>
+ <widget class="QDialog" name="Dialog">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>600</width>
+    <height>290</height>
+   </rect>
+  </property>
+  <property name="minimumSize">
+   <size>
+    <width>600</width>
+    <height>290</height>
+   </size>
+  </property>
+  <property name="windowTitle">
+   <string>Объект теплоснабжения (маркер): Дополнительные атрибуты</string>
+  </property>
+  <property name="accessibleName">
+   <string notr="true">btnSave</string>
+  </property>
+  <layout class="QVBoxLayout" name="verticalLayout_2">
+   <item>
+    <layout class="QGridLayout" name="gridLayout_2">
+     <item row="0" column="1">
+      <layout class="QHBoxLayout" name="horizontalLayout_4">
+       <item>
+        <layout class="QGridLayout" name="gridLayout_3">
+         <item row="12" column="1">
+          <widget class="QgsDoubleSpinBox" name="sbSizeOfSanitaryProtectionZone">
+           <property name="maximum">
+            <double>10000000.000000000000000</double>
+           </property>
+           <property name="clearValue">
+            <bool>true</bool>
+           </property>
+          </widget>
+         </item>
+         <item row="12" column="0">
+          <widget class="QLabel" name="label_13">
+           <property name="text">
+            <string>Размер санитарно-защитной 
+зоны, м</string>
+           </property>
+          </widget>
+         </item>
+         <item row="4" column="0">
+          <widget class="QLabel" name="label_6">
+           <property name="text">
+            <string>Электрическая мощность, МВт</string>
+           </property>
+          </widget>
+         </item>
+         <item row="1" column="1">
+          <widget class="QComboBox" name="cbMainTypeOfFuel"/>
+         </item>
+         <item row="7" column="1">
+          <widget class="QgsDoubleSpinBox" name="sbThermalPower">
+           <property name="maximum">
+            <double>10000000.000000000000000</double>
+           </property>
+           <property name="clearValue">
+            <bool>true</bool>
+           </property>
+          </widget>
+         </item>
+         <item row="17" column="1">
+          <widget class="QLineEdit" name="tbNote">
+           <property name="clearButtonEnabled">
+            <bool>true</bool>
+           </property>
+          </widget>
+         </item>
+         <item row="7" column="0">
+          <widget class="QLabel" name="label_4">
+           <property name="text">
+            <string>Тепловая мощность, Гкал/ч</string>
+           </property>
+          </widget>
+         </item>
+         <item row="15" column="0">
+          <widget class="QLabel" name="label_9">
+           <property name="text">
+            <string>Размер охранной зоны, м</string>
+           </property>
+          </widget>
+         </item>
+         <item row="17" column="0">
+          <widget class="QLabel" name="label_8">
+           <property name="text">
+            <string>Примечание</string>
+           </property>
+          </widget>
+         </item>
+         <item row="4" column="1">
+          <widget class="QgsDoubleSpinBox" name="sbElectricPower">
+           <property name="maximum">
+            <double>10000000.000000000000000</double>
+           </property>
+           <property name="clearValue">
+            <bool>true</bool>
+           </property>
+          </widget>
+         </item>
+         <item row="10" column="0">
+          <widget class="QLabel" name="label_24">
+           <property name="text">
+            <string>Процент износа, %</string>
+           </property>
+          </widget>
+         </item>
+         <item row="2" column="1">
+          <widget class="QgsDoubleSpinBox" name="sbActualUse">
+           <property name="maximum">
+            <double>100.000000000000000</double>
+           </property>
+           <property name="clearValue">
+            <bool>true</bool>
+           </property>
+          </widget>
+         </item>
+         <item row="2" column="0">
+          <widget class="QLabel" name="label_7">
+           <property name="text">
+            <string>Фактическое использование
+объекта, %</string>
+           </property>
+          </widget>
+         </item>
+         <item row="1" column="0">
+          <widget class="QLabel" name="label_3">
+           <property name="text">
+            <string>Основной вид топлива</string>
+           </property>
+          </widget>
+         </item>
+         <item row="10" column="1">
+          <widget class="QgsDoubleSpinBox" name="sbWearPercentage">
+           <property name="maximum">
+            <double>100.000000000000000</double>
+           </property>
+           <property name="clearValue">
+            <bool>true</bool>
+           </property>
+          </widget>
+         </item>
+         <item row="15" column="1">
+          <widget class="QgsDoubleSpinBox" name="sbGuardZoneSize">
+           <property name="maximum">
+            <double>10000000.000000000000000</double>
+           </property>
+           <property name="clearValue">
+            <bool>true</bool>
+           </property>
+          </widget>
+         </item>
+        </layout>
+       </item>
+      </layout>
+     </item>
+     <item row="3" column="1">
+      <layout class="QHBoxLayout" name="horizontalLayout">
+       <item>
+        <spacer name="horizontalSpacer">
+         <property name="orientation">
+          <enum>Qt::Horizontal</enum>
+         </property>
+         <property name="sizeHint" stdset="0">
+          <size>
+           <width>40</width>
+           <height>20</height>
+          </size>
+         </property>
+        </spacer>
+       </item>
+       <item>
+        <widget class="QPushButton" name="btnOk">
+         <property name="accessibleName">
+          <string notr="true">btnSave</string>
+         </property>
+         <property name="text">
+          <string>Ок</string>
+         </property>
+         <property name="default">
+          <bool>true</bool>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QPushButton" name="btnCancel">
+         <property name="accessibleName">
+          <string notr="true">btnCancel</string>
+         </property>
+         <property name="text">
+          <string>Отмена</string>
+         </property>
+        </widget>
+       </item>
+      </layout>
+     </item>
+     <item row="2" column="1">
+      <layout class="QHBoxLayout" name="horizontalLayout_2">
+       <item>
+        <spacer name="verticalSpacer">
+         <property name="orientation">
+          <enum>Qt::Vertical</enum>
+         </property>
+         <property name="sizeHint" stdset="0">
+          <size>
+           <width>20</width>
+           <height>40</height>
+          </size>
+         </property>
+        </spacer>
+       </item>
+      </layout>
+     </item>
+    </layout>
+   </item>
+  </layout>
+ </widget>
+ <customwidgets>
+  <customwidget>
+   <class>QgsDoubleSpinBox</class>
+   <extends>QDoubleSpinBox</extends>
+   <header>qgsdoublespinbox.h</header>
+  </customwidget>
+ </customwidgets>
+ <tabstops>
+  <tabstop>cbMainTypeOfFuel</tabstop>
+  <tabstop>sbActualUse</tabstop>
+  <tabstop>sbElectricPower</tabstop>
+  <tabstop>sbThermalPower</tabstop>
+  <tabstop>sbWearPercentage</tabstop>
+  <tabstop>sbSizeOfSanitaryProtectionZone</tabstop>
+  <tabstop>sbGuardZoneSize</tabstop>
+  <tabstop>tbNote</tabstop>
+  <tabstop>btnOk</tabstop>
+  <tabstop>btnCancel</tabstop>
+ </tabstops>
+ <resources/>
+ <connections/>
+</ui>

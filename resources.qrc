@@ -1,0 +1,19 @@
+<RCC>
+    <qresource prefix="/plugins/GisEC" >
+        <file>icon.png</file>
+        <file>Icons/open_project.png</file>
+        <file>Icons/add_network.png</file>
+        <file>Icons/add_object.png</file>
+        <file>Icons/copy_network.png</file>
+        <file>Icons/edit_network.png</file>
+        <file>Icons/edit_object.png</file>
+        <file>Icons/split_network.png</file>
+        <file>Icons/settings.png</file>
+        <file>Icons/add_point.png</file>
+        <file>Icons/edit_point.png</file>
+        <file>Icons/dxf_import_2.png</file>
+        <file>Icons/dxf_import.png</file>
+        <file>Icons/dxf_batch_import.png</file>
+        <file>Icons/combine.png</file> 
+    </qresource>
+</RCC>

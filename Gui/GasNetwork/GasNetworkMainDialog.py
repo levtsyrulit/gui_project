@@ -1,0 +1,290 @@
+import os
+
+from qgis.PyQt import uic
+from qgis.PyQt import QtWidgets
+from qgis.PyQt.QtCore import pyqtSignal, QCoreApplication
+from qgis.PyQt.QtWidgets import QMessageBox
+from qgis.core import QgsProject, QgsGeometry, QgsMapLayer, QgsFeature
+from qgis.gui import QgsMapToolIdentifyFeature
+
+from ...Helpers.LayerNames import LayerNames
+from ...MapTools.PolylineMapTool import PolylineMapTool
+from ...Models.GasPipeModel import GasPipeModel
+from ..ObjectPassport.ObjectPassportDialog import ObjectPassportDialog
+from .GasNetworkAdditionalAttributesDialog import GasPipeAdditionalAttributesDialog
+from ...Enums.DlgMode import DlgMode
+from ...Services.DictionaryService import DictionariesService
+from ...Helpers.DictionaryComboBoxHelper import DictionaryComboBoxHelper
+from ...Services.FileService import FileService
+from ...Services.AdministrationServerService import AdministrationServerService
+from ..ProgressDialog.ProgressDialog import ProgressDialog
+
+# This loads your .ui file so that PyQt can populate your plugin with the elements from Qt Designer
+FORM_CLASS, _ = uic.loadUiType(os.path.join(
+    os.path.dirname(__file__), 'GasNetworkMainDialog.ui'))
+
+class GasNetworkMainDialog(QtWidgets.QDialog, FORM_CLASS):
+    LAYERNAME = LayerNames.GasNetworks
+    closingDlg = pyqtSignal()
+
+    def __init__(self, iface, mode = DlgMode.VIEW, parent=None, feature=None):
+
+        """Constructor."""
+        super(GasNetworkMainDialog, self).__init__(parent)
+        # Set up the user interface from Designer through FORM_CLASS.
+        # After self.setupUi() you can access any designer object by doing
+        # self.<objectname>, and you can use autoconnect slots - see
+        # http://qt-project.org/doc/qt-4.8/designer-using-a-ui-file.html
+        # #widgets-and-dialogs-with-auto-connect
+        self.setupUi(self)
+        self.setModal(True)
+
+        self.mapTool = None
+        self.model = GasPipeModel()
+        self.layer = None
+        self.points = []
+        self.mode = mode
+        self.feature = feature
+        self.iface = iface
+        self.canvas = self.iface.mapCanvas()
+        self.specialPurposeIsSelected = False
+
+        signal = self.__initLayer()
+        if signal == False:
+            raise
+        else:
+            ds = DictionariesService()
+            self.dictionaryComboBoxHelper = DictionaryComboBoxHelper()
+            self.dictionaryComboBoxHelper.setItems(self.cbObjectState, ds.Dictionary11C.getElements())
+            self.dictionaryComboBoxHelper.setItems(self.cbObjectType, ds.Dictionary11Q.getElements())
+            self.dictionaryComboBoxHelper.setItems(self.cbCategory, ds.Dictionary11R.getElements())
+            self.dictionaryComboBoxHelper.setItems(self.cbObjectLocation, ds.Dictionary11F.getElements())
+            self.dictionaryComboBoxHelper.setItems(self.cbSpecialPurpose, ds.DictionaryCT29.getSpecificElements(["CT29.1"]))
+
+            self.__initFields()
+
+            self.cbObjectType.currentIndexChanged.connect(self.__checkSpecialPurposeEnable)
+            self.btnAdditionalAttributes.clicked.connect(self.__openAdditionalAttributesDlg)
+            self.btnObjectPassport.clicked.connect(self.__openObjectPassportDlg)
+            self.btnCancel.clicked.connect(self.__closeDlg)
+            self.btnOk.clicked.connect(self.__applyChanges)
+            self.btnDownloadFiles.clicked.connect(self.__downloadAttachedFiles)
+
+            self.__initMode()
+            self.__checkSpecialPurposeEnable()
+
+    def __checkSpecialPurposeEnable(self):
+        item = self.dictionaryComboBoxHelper.getSelectedItem(self.cbObjectType)
+        self.specialPurposeIsSelected = item and item.name == "11Q.0"
+        if self.specialPurposeIsSelected:
+            self.cbSpecialPurpose.setEnabled(self.mode != DlgMode.VIEW)
+        else:
+            self.cbSpecialPurpose.setEnabled(False)
+            self.dictionaryComboBoxHelper.setSelectedElementsFromKeyString(self.cbSpecialPurpose, DictionaryComboBoxHelper.UNSELECTED_ITEM.id)            
+
+    """Инициализируем режим работы формы и подготавливаем инструмент работы с картой"""
+    def __initMode(self):
+        self.__setReadOnly(self.mode == DlgMode.VIEW)
+        if self.mode == DlgMode.CREATE:
+            self.btnDownloadFiles.hide()
+            self.mapTool = PolylineMapTool(self.canvas)
+            self.mapTool.finished.connect(self.__geometrySpecified)
+            self.mapTool.canceled.connect(self.__canceled)
+        else:
+            if self.feature:
+                self.__editElement(self.feature)
+                return
+            else:
+                self.mapTool = QgsMapToolIdentifyFeature(self.canvas) 
+                self.mapTool.setLayer(self.layer)
+                self.mapTool.featureIdentified.connect(self.__featureSelected)
+
+        self.canvas.setMapTool(self.mapTool)
+        self.mapTool.deactivated.connect(self.__canceled)
+
+    """Перевод всех элементов формы в режим 'Только чтение'"""
+    def __setReadOnly(self, readOnly = False):
+        self.tbObjectIdentifier.setReadOnly(readOnly)
+        self.cbObjectState.setEnabled(not readOnly)
+        self.cbObjectType.setEnabled(not readOnly)
+        self.cbCategory.setEnabled(not readOnly)
+        self.cbObjectLocation.setEnabled(not readOnly)
+        self.tbLocation.setReadOnly(readOnly)
+        self.tbCadastralNumber.setReadOnly(readOnly)
+        self.cbSpecialPurpose.setEnabled(not readOnly)
+        self.tbDataSource.setReadOnly(readOnly)
+
+    """Инициализация слоя"""
+    def __initLayer(self):
+        layer = self.__getLayerByName(self.LAYERNAME)
+        if layer is None:
+            QMessageBox.critical(self, "Критическая ошибка", "Не найден слой ""{0}""".format(self.LAYERNAME),
+                                 QMessageBox.Ok)
+            return False
+        if ((layer.isEditable() or layer.startEditing()) == False):
+            if self.mode == DlgMode.CREATE:
+                QMessageBox.critical(self, "Критическая ошибка", "У Вас нет прав для редактирования этого слоя",
+                                     QMessageBox.Ok)
+                return False
+            elif self.mode == DlgMode.EDIT:
+                self.mode = DlgMode.VIEW
+
+        self.layer = layer
+        return True
+
+    def closeEvent(self, event):
+        self.closingDlg.emit()
+
+    def __closeDlg(self):
+        if self.mapTool != None:
+            self.canvas.unsetMapTool(self.mapTool)
+        self.close()
+
+    def __geometrySpecified(self, points: list):
+        self.__createElement(points)
+
+    def __featureSelected(self, feature):
+        self.__editElement(feature)
+
+    def __createElement(self, points: list):
+        if len(points) < 2:
+            self.closeDlg()
+        else:
+            self.points = points
+            self.show()
+
+    def __editElement(self, feature):
+        if not feature:
+            self.closeDlg()
+        else:
+            self.layer.removeSelection()
+            self.layer.select([feature.id()])
+            self.feature = feature
+            self.model.fillModelFromFeature(feature)
+            self.__initFields()
+            self.show()
+
+    def __canceled(self):
+        if self.feature == None:
+            self.mapTool.deactivated.disconnect(self.__canceled)
+        self.__closeDlg()
+
+    def __fillModel(self):
+        self.model.denomination = self.tbObjectIdentifier.text()
+        self.model.location = self.tbLocation.text()
+        self.model.state = self.dictionaryComboBoxHelper.getKeyStringForSelectedElements(self.cbObjectState)
+        self.model.type_ = self.dictionaryComboBoxHelper.getKeyStringForSelectedElements(self.cbObjectType)
+        self.model.category = self.dictionaryComboBoxHelper.getKeyStringForSelectedElements(self.cbCategory)
+        self.model.arrangement = self.dictionaryComboBoxHelper.getKeyStringForSelectedElements(self.cbObjectLocation)
+        self.model.cadastral_number = self.tbCadastralNumber.text()
+        self.model.specialPurpose = self.dictionaryComboBoxHelper.getKeyStringForSelectedElements(self.cbSpecialPurpose)
+        if self.specialPurposeIsSelected:
+            self.model.specialPurpose = self.dictionaryComboBoxHelper.getKeyStringForSelectedElements(self.cbSpecialPurpose)
+        else:
+            self.model.specialPurpose = None
+        self.model.data_source = self.tbDataSource.text()        
+        
+    def __initFields(self):
+        self.tbObjectIdentifier.setText(self.model.denomination)
+        self.tbLocation.setText(self.model.location)
+        self.dictionaryComboBoxHelper.setSelectedElementsFromKeyString( self.cbObjectState, self.model.state)
+        self.dictionaryComboBoxHelper.setSelectedElementsFromKeyString( self.cbObjectType, self.model.type_)
+        self.dictionaryComboBoxHelper.setSelectedElementsFromKeyString( self.cbCategory, self.model.category)
+        self.dictionaryComboBoxHelper.setSelectedElementsFromKeyString( self.cbObjectLocation, self.model.arrangement)
+        self.tbCadastralNumber.setText(self.model.cadastral_number)
+        self.dictionaryComboBoxHelper.setSelectedElementsFromKeyString(self.cbSpecialPurpose, self.model.specialPurpose)
+        self.tbDataSource.setText(self.model.data_source)
+
+        self.__checkSpecialPurposeEnable()
+
+        if self.model.attachedFilesCount is None or self.model.attachedFilesCount.strip() == "" or self.model.attachedFilesCount.strip() == "0":
+            self.btnDownloadFiles.setText("Файл источник")
+            self.btnDownloadFiles.setEnabled(False)
+        else:
+            self.btnDownloadFiles.setText("Файл источник ({0})".format("0" if self.model.attachedFilesCount == "" else self.model.attachedFilesCount))
+            self.btnDownloadFiles.setEnabled(True)
+
+    def __createFeatureFromModel(self, layer: QgsMapLayer):
+        feature = QgsFeature(layer.fields())
+        self.model.fillFeatureFromModel(feature)
+        feature.setGeometry(self.__getGeometry())
+        (created, outFeatures) = layer.dataProvider().addFeatures([feature])
+        if created:
+            return outFeatures[0]
+        return None
+
+    def __getGeometry(self):
+        return QgsGeometry.fromPolylineXY(self.points)
+
+    def __getLayerByName(self, name):
+        layers = QgsProject.instance().mapLayersByName(name) 
+        if layers:
+            return layers[0]        
+        return None
+
+    def __applyChanges(self):
+        if self.mode not in [DlgMode.CREATE, DlgMode.EDIT]:
+            self.__closeDlg()
+            return
+
+        self.__fillModel()
+        errors = self.model.validate()
+        if len(errors) > 0:
+            QMessageBox.critical(self, "Ошибка заполнения полей", "\n".join(errors), QMessageBox.Ok)
+            return
+
+        if self.mode == DlgMode.CREATE:
+            self.__insertFeature()
+        elif self.mode == DlgMode.EDIT:
+            self.__updateFeature()
+        
+        if self.mode != DlgMode.VIEW:
+            self.layer.commitChanges()            
+        self.__closeDlg()
+
+    def __updateFeature(self):
+        if self.feature and self.layer:
+            self.model.fillFeatureFromModel(self.feature)
+            self.layer.updateFeature(self.feature)
+            self.canvas.refresh()
+
+    def __insertFeature(self):
+        feature = self.__createFeatureFromModel(self.layer)
+        self.layer.reload()
+        self.canvas.refresh() 
+
+    def __openAdditionalAttributesDlg(self):
+        dlgAdditionalAttributes = GasPipeAdditionalAttributesDialog(self.model, self.mode, self)
+        dlgAdditionalAttributes.exec()
+
+    def __openObjectPassportDlg(self):
+        dlgObjectPassport = ObjectPassportDialog(self.model, self.mode, self)
+        dlgObjectPassport.exec()
+
+    def __downloadAttachedFiles(self):
+        progressDlg = ProgressDialog("Скачивание файлов", "инициализация", self)
+        try:            
+            progressDlg.show()
+            QCoreApplication.processEvents()
+
+            aService = AdministrationServerService()
+            progressDlg.setAction("получение файлов из API")
+            model =  aService.downloadFolderFiles(self.model.attachedFilesID)
+
+            if len(model["files"]) == 0:
+                QMessageBox.info(self, "Скачивание файлов", "В каталоге отсутствуют файлы.", QMessageBox.Ok)    
+                return
+
+            fileService = FileService()
+            progressDlg.setAction("создание временного каталога")
+            tmpFolder = fileService.createTmpFolder()
+            for file in model["files"]:
+                progressDlg.setAction("сохранение файла {0}".format(file["name"]))
+                fileService.saveFileToFolder(tmpFolder, file["name"], file["content"])
+
+            fileService.openFile(tmpFolder)
+        except Exception as ex:
+            print(ex)
+            QMessageBox.critical(self, "Критическая ошибка", "Ошибка скачивания файлов", QMessageBox.Ok)
+        finally:
+            progressDlg.close()

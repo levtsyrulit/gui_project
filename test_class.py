@@ -1,0 +1,6 @@
+
+class Layers():
+
+    WaterSupplyNetworks = []
+    GasSupplyNetworks = []
+

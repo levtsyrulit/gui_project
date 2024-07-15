@@ -1,0 +1,469 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>Dialog</class>
+ <widget class="QDialog" name="Dialog">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>600</width>
+    <height>640</height>
+   </rect>
+  </property>
+  <property name="minimumSize">
+   <size>
+    <width>600</width>
+    <height>640</height>
+   </size>
+  </property>
+  <property name="windowTitle">
+   <string>Жидкие углеводороды: Дополнительные атрибуты</string>
+  </property>
+  <property name="accessibleName">
+   <string notr="true">btnSave</string>
+  </property>
+  <layout class="QVBoxLayout" name="verticalLayout_2">
+   <item>
+    <layout class="QGridLayout" name="gridLayout_2">
+     <item row="0" column="1">
+      <layout class="QHBoxLayout" name="horizontalLayout_4">
+       <item>
+        <layout class="QGridLayout" name="gridLayout_3">
+         <item row="18" column="1">
+          <widget class="QgsDoubleSpinBox" name="sbHatchwayRingMark">
+           <property name="maximum">
+            <double>10000000.000000000000000</double>
+           </property>
+           <property name="clearValue">
+            <bool>true</bool>
+           </property>
+          </widget>
+         </item>
+         <item row="25" column="0">
+          <widget class="QLabel" name="label_18">
+           <property name="text">
+            <string>Подземная укладка</string>
+           </property>
+          </widget>
+         </item>
+         <item row="22" column="0">
+          <widget class="QLabel" name="label_15">
+           <property name="text">
+            <string>Отметка земли</string>
+           </property>
+          </widget>
+         </item>
+         <item row="27" column="0">
+          <widget class="QLabel" name="label_20">
+           <property name="text">
+            <string>Трубопровод спецназначения</string>
+           </property>
+          </widget>
+         </item>
+         <item row="4" column="0">
+          <widget class="QLabel" name="label">
+           <property name="text">
+            <string>Диаметр трубопровода, мм</string>
+           </property>
+          </widget>
+         </item>
+         <item row="22" column="1">
+          <widget class="QgsDoubleSpinBox" name="sbGroundMark">
+           <property name="maximum">
+            <double>10000000.000000000000000</double>
+           </property>
+           <property name="clearValue">
+            <bool>true</bool>
+           </property>
+          </widget>
+         </item>
+         <item row="27" column="1">
+          <widget class="QComboBox" name="cbSpecialPurposePipeline"/>
+         </item>
+         <item row="28" column="0">
+          <widget class="QLabel" name="label_5">
+           <property name="text">
+            <string>Примечание</string>
+           </property>
+          </widget>
+         </item>
+         <item row="28" column="1">
+          <widget class="QLineEdit" name="tbNote">
+           <property name="clearButtonEnabled">
+            <bool>true</bool>
+           </property>
+          </widget>
+         </item>
+         <item row="0" column="1">
+          <widget class="QgsDoubleSpinBox" name="sbLength">
+           <property name="decimals">
+            <number>3</number>
+           </property>
+           <property name="maximum">
+            <double>10000000.000000000000000</double>
+           </property>
+           <property name="clearValue">
+            <bool>true</bool>
+           </property>
+          </widget>
+         </item>
+         <item row="21" column="0">
+          <widget class="QLabel" name="label_14">
+           <property name="text">
+            <string>Отметка дна колодца </string>
+           </property>
+          </widget>
+         </item>
+         <item row="17" column="0">
+          <widget class="QLabel" name="label_10">
+           <property name="text">
+            <string>Глубина залегания</string>
+           </property>
+          </widget>
+         </item>
+         <item row="26" column="0">
+          <widget class="QLabel" name="label_19">
+           <property name="text">
+            <string>Материал</string>
+           </property>
+          </widget>
+         </item>
+         <item row="5" column="0">
+          <widget class="QLabel" name="label_2">
+           <property name="text">
+            <string>Диаметр трубопровода внешний, мм</string>
+           </property>
+          </widget>
+         </item>
+         <item row="16" column="1">
+          <widget class="QgsDoubleSpinBox" name="sbMinimalLengthZoneSize">
+           <property name="maximum">
+            <double>10000000.000000000000000</double>
+           </property>
+           <property name="clearValue">
+            <bool>true</bool>
+           </property>
+          </widget>
+         </item>
+         <item row="24" column="0">
+          <widget class="QLabel" name="label_17">
+           <property name="text">
+            <string>Конструкции</string>
+           </property>
+          </widget>
+         </item>
+         <item row="20" column="1">
+          <widget class="QgsDoubleSpinBox" name="sbPipeTopMark">
+           <property name="maximum">
+            <double>10000000.000000000000000</double>
+           </property>
+           <property name="clearValue">
+            <bool>true</bool>
+           </property>
+          </widget>
+         </item>
+         <item row="19" column="0">
+          <widget class="QLabel" name="label_12">
+           <property name="text">
+            <string>Отметка лотка</string>
+           </property>
+          </widget>
+         </item>
+         <item row="19" column="1">
+          <widget class="QgsDoubleSpinBox" name="sbTrayMark">
+           <property name="maximum">
+            <double>10000000.000000000000000</double>
+           </property>
+           <property name="clearValue">
+            <bool>true</bool>
+           </property>
+          </widget>
+         </item>
+         <item row="23" column="1">
+          <widget class="QgsSpinBox" name="sbGasketNumber">
+           <property name="maximum">
+            <number>10000000</number>
+           </property>
+           <property name="clearValue">
+            <bool>true</bool>
+           </property>
+          </widget>
+         </item>
+         <item row="10" column="0">
+          <widget class="QLabel" name="label_24">
+           <property name="text">
+            <string>Процент износа, %</string>
+           </property>
+          </widget>
+         </item>
+         <item row="16" column="0">
+          <widget class="QLabel" name="label_7">
+           <property name="text">
+            <string>Зона минимальных расстояний
+до магистральных или
+промышленных трубопроводов</string>
+           </property>
+          </widget>
+         </item>
+         <item row="20" column="0">
+          <widget class="QLabel" name="label_13">
+           <property name="text">
+            <string>Отметка верха трубы</string>
+           </property>
+          </widget>
+         </item>
+         <item row="7" column="1">
+          <widget class="QgsSpinBox" name="sbPipesNumber">
+           <property name="maximum">
+            <number>10000000</number>
+           </property>
+           <property name="clearValue">
+            <bool>true</bool>
+           </property>
+          </widget>
+         </item>
+         <item row="24" column="1">
+          <widget class="QComboBox" name="cbConstructions"/>
+         </item>
+         <item row="14" column="1">
+          <widget class="QgsDoubleSpinBox" name="sbGuardZoneSize">
+           <property name="maximum">
+            <double>10000000.000000000000000</double>
+           </property>
+           <property name="clearValue">
+            <bool>true</bool>
+           </property>
+          </widget>
+         </item>
+         <item row="12" column="1">
+          <widget class="QgsDoubleSpinBox" name="sbSizeOfSanitaryProtectionZone">
+           <property name="maximum">
+            <double>10000000.000000000000000</double>
+           </property>
+           <property name="clearValue">
+            <bool>true</bool>
+           </property>
+          </widget>
+         </item>
+         <item row="14" column="0">
+          <widget class="QLabel" name="label_9">
+           <property name="text">
+            <string>Размер охранной зоны, м</string>
+           </property>
+          </widget>
+         </item>
+         <item row="10" column="1">
+          <widget class="QgsDoubleSpinBox" name="sbWearPercentage">
+           <property name="maximum">
+            <double>100.000000000000000</double>
+           </property>
+           <property name="clearValue">
+            <bool>true</bool>
+           </property>
+          </widget>
+         </item>
+         <item row="12" column="0">
+          <widget class="QLabel" name="label_8">
+           <property name="text">
+            <string>Размер санитарно-защитной
+зоны, м</string>
+           </property>
+          </widget>
+         </item>
+         <item row="25" column="1">
+          <widget class="QComboBox" name="cbUndergroundLaying"/>
+         </item>
+         <item row="2" column="1">
+          <widget class="QgsDoubleSpinBox" name="sbOperatingPressure">
+           <property name="maximum">
+            <double>10000000.000000000000000</double>
+           </property>
+           <property name="clearValue">
+            <bool>true</bool>
+           </property>
+          </widget>
+         </item>
+         <item row="26" column="1">
+          <widget class="QComboBox" name="cbMaterialCT4"/>
+         </item>
+         <item row="0" column="0">
+          <widget class="QLabel" name="label_4">
+           <property name="text">
+            <string>Протяженность сооружения, км</string>
+           </property>
+          </widget>
+         </item>
+         <item row="7" column="0">
+          <widget class="QLabel" name="label_3">
+           <property name="text">
+            <string>Количество труб</string>
+           </property>
+          </widget>
+         </item>
+         <item row="2" column="0">
+          <widget class="QLabel" name="label_6">
+           <property name="text">
+            <string>Рабочее давление в
+трубопроводе, МПа</string>
+           </property>
+          </widget>
+         </item>
+         <item row="21" column="1">
+          <widget class="QgsDoubleSpinBox" name="sbPipeBottomMark">
+           <property name="maximum">
+            <double>10000000.000000000000000</double>
+           </property>
+           <property name="clearValue">
+            <bool>true</bool>
+           </property>
+          </widget>
+         </item>
+         <item row="23" column="0">
+          <widget class="QLabel" name="label_16">
+           <property name="text">
+            <string>Число прокладок</string>
+           </property>
+          </widget>
+         </item>
+         <item row="18" column="0">
+          <widget class="QLabel" name="label_11">
+           <property name="text">
+            <string>Отметка кольца люка</string>
+           </property>
+          </widget>
+         </item>
+         <item row="4" column="1">
+          <widget class="QgsDoubleSpinBox" name="sbPipelineDiameter">
+           <property name="maximum">
+            <double>10000000.000000000000000</double>
+           </property>
+           <property name="clearValue">
+            <bool>true</bool>
+           </property>
+          </widget>
+         </item>
+         <item row="17" column="1">
+          <widget class="QgsDoubleSpinBox" name="sbOccurrenceDepth">
+           <property name="maximum">
+            <double>10000000.000000000000000</double>
+           </property>
+           <property name="clearValue">
+            <bool>true</bool>
+           </property>
+          </widget>
+         </item>
+         <item row="5" column="1">
+          <widget class="QgsDoubleSpinBox" name="sbPipelineOuterDiameter">
+           <property name="maximum">
+            <double>10000000.000000000000000</double>
+           </property>
+           <property name="clearValue">
+            <bool>true</bool>
+           </property>
+          </widget>
+         </item>
+        </layout>
+       </item>
+      </layout>
+     </item>
+     <item row="3" column="1">
+      <layout class="QHBoxLayout" name="horizontalLayout">
+       <item>
+        <spacer name="horizontalSpacer">
+         <property name="orientation">
+          <enum>Qt::Horizontal</enum>
+         </property>
+         <property name="sizeHint" stdset="0">
+          <size>
+           <width>40</width>
+           <height>20</height>
+          </size>
+         </property>
+        </spacer>
+       </item>
+       <item>
+        <widget class="QPushButton" name="btnOk">
+         <property name="accessibleName">
+          <string notr="true">btnSave</string>
+         </property>
+         <property name="text">
+          <string>Ок</string>
+         </property>
+         <property name="default">
+          <bool>true</bool>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QPushButton" name="btnCancel">
+         <property name="accessibleName">
+          <string notr="true">btnCancel</string>
+         </property>
+         <property name="text">
+          <string>Отмена</string>
+         </property>
+        </widget>
+       </item>
+      </layout>
+     </item>
+     <item row="2" column="1">
+      <layout class="QHBoxLayout" name="horizontalLayout_2">
+       <item>
+        <spacer name="verticalSpacer">
+         <property name="orientation">
+          <enum>Qt::Vertical</enum>
+         </property>
+         <property name="sizeHint" stdset="0">
+          <size>
+           <width>20</width>
+           <height>40</height>
+          </size>
+         </property>
+        </spacer>
+       </item>
+      </layout>
+     </item>
+    </layout>
+   </item>
+  </layout>
+ </widget>
+ <customwidgets>
+  <customwidget>
+   <class>QgsDoubleSpinBox</class>
+   <extends>QDoubleSpinBox</extends>
+   <header>qgsdoublespinbox.h</header>
+  </customwidget>
+  <customwidget>
+   <class>QgsSpinBox</class>
+   <extends>QSpinBox</extends>
+   <header>qgsspinbox.h</header>
+  </customwidget>
+ </customwidgets>
+ <tabstops>
+  <tabstop>sbLength</tabstop>
+  <tabstop>sbOperatingPressure</tabstop>
+  <tabstop>sbPipelineDiameter</tabstop>
+  <tabstop>sbPipelineOuterDiameter</tabstop>
+  <tabstop>sbPipesNumber</tabstop>
+  <tabstop>sbWearPercentage</tabstop>
+  <tabstop>sbSizeOfSanitaryProtectionZone</tabstop>
+  <tabstop>sbGuardZoneSize</tabstop>
+  <tabstop>sbMinimalLengthZoneSize</tabstop>
+  <tabstop>sbOccurrenceDepth</tabstop>
+  <tabstop>sbHatchwayRingMark</tabstop>
+  <tabstop>sbTrayMark</tabstop>
+  <tabstop>sbPipeTopMark</tabstop>
+  <tabstop>sbPipeBottomMark</tabstop>
+  <tabstop>sbGroundMark</tabstop>
+  <tabstop>sbGasketNumber</tabstop>
+  <tabstop>cbConstructions</tabstop>
+  <tabstop>cbUndergroundLaying</tabstop>
+  <tabstop>cbMaterialCT4</tabstop>
+  <tabstop>cbSpecialPurposePipeline</tabstop>
+  <tabstop>tbNote</tabstop>
+  <tabstop>btnOk</tabstop>
+  <tabstop>btnCancel</tabstop>
+ </tabstops>
+ <resources/>
+ <connections/>
+</ui>
